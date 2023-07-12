@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pymongo
 import numpy
 import time
+from datetime import datetime, timedelta
 
 def main():
     print('\n \n ')
@@ -18,7 +19,8 @@ def main():
     page = 1
     position = 0
     pageWithContent = True
-    delayOptions = [2,3,4]
+    delayOptions = [1,2,3]
+    updateIntervalDays = timedelta(days=15)
 
     while (pageWithContent):
         print('Adding page {}'.format(page))
@@ -27,6 +29,10 @@ def main():
         time.sleep(numpy.random.choice(delayOptions))
 
         signalTable = soup.find('div', class_= 'signals-table')
+        pageWithContent = signalTable != None
+        if ~pageWithContent:
+            break
+            
         signalTable.find('div', class_= 'row header').decompose()
         hrefs = signalTable.findAll('a', class_= 'signal-avatar')
         
@@ -49,7 +55,14 @@ def main():
         leveragies = signalTable.findAll('div', class_='col-leverage')
         
         while (position < len(prices)):
-            #2006 Signals at 24-05
+            
+            signal = mycol.find_one({"mqlId":str(mqlIds[position])})
+            if (signal and 
+                'updated' in signal and 
+                datetime.strptime(signal['updated'], "%m/%d/%y %X") > (datetime.today() - updateIntervalDays)):
+                position += 1
+                continue
+            
             print('Adding signal {}'.format(signalNames[position]))
             
             signal = { 
@@ -66,10 +79,11 @@ def main():
                 'trades':int(trades[position].get_text().replace(' ','')),
                 'winPercent':float(winPercent[position].get_text().removesuffix('%'))/100,
                 'activities':activities[position].get_text(),
-                'profitFactor': float(profitFactors[position].get_text()),
+                'profitFactor': float(profitFactors[position].get_text()) if (profitFactors[position].get_text().isnumeric()) else '',
                 'ep':ep[position].get_text(),	
                 'drawdown':float(drawdowns[position].get_text().removesuffix('%'))/100,
                 'leveragies':leveragies[position].get_text(),
+                'updated': time.strftime("%D %T"),
             }
 
             redirectPrefix = '?source=Site+Signals+MT5+Tile#!tab='
@@ -99,20 +113,21 @@ def main():
             signalDetail = BeautifulSoup(signalDetailRequest.content, 'html.parser')
             time.sleep(numpy.random.choice(delayOptions))
             signalDetail = signalDetail.select('div.rating > div')
-            rating = signalDetail[0]['class']
-            if (len(rating) > 0): 
-                rating = rating[0].removeprefix('v')
-                rating = float(rating)/10
-            else:
-                rating = ''
-            signal['rating'] = rating
+            if (len(signalDetail) > 0): 
+                rating = signalDetail[0]['class']
+                if (len(rating) > 0):
+                    rating = rating[0].removeprefix('v')
+                    rating = float(rating)/10
+                else:
+                    rating = ''
+                signal['rating'] = rating
 
-            mycol.replace_one({"link":str(links[position])}, signal, upsert=True)
+            mycol.replace_one({"mqlId":str(mqlIds[position])}, signal, upsert=True)
             position += 1
 
         # forced stop for testing
         #pageWithContent = False
-        pageWithContent = site.status_code != 404
+
         page += 1
         position = 0
 
