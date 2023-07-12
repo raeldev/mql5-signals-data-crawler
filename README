@@ -1,3 +1,11 @@
-Basic project to extract all public (without login) signal information.
+Basic project to extract all public signals information.
 
-I'm not a python expert and I do it for study too.
+Prerequisites:
+  Docker
+
+I'm not a python expert and I do it to learn.
+
+ToDo:
+- Add Python container in docker-compose
+- Get Risks Data
+- Get login protected data like Trading History
