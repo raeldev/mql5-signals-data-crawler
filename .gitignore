@@ -171,3 +171,8 @@ bin/python3
 bin/python3.11
 .gitignore
 bin/python
+bin/f2py
+.gitignore
+bin/f2py3
+bin/f2py3.11
+bin/normalizer
