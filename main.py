@@ -146,8 +146,8 @@ def mapStastitcs(labels, values):
     stats = {}
     pos = 0
     while (pos < len(labels)):
-        label = labels[pos].get_text().strip()
-        value = values[pos].get_text().replace('\r','').replace('\n','').strip().removesuffix(':')
+        label = labels[pos].get_text().replace(':','').strip()
+        value = values[pos].get_text().replace('\r','').replace('\n','').replace(':','').strip()
         stats[label] = value
         pos += 1
 
