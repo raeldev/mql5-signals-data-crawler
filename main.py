@@ -55,7 +55,6 @@ def main():
         leveragies = signalTable.findAll('div', class_='col-leverage')
         
         while (position < len(prices)):
-            
             signal = mycol.find_one({"mqlId":str(mqlIds[position])})
             if (signal and 
                 'updated' in signal and 
@@ -127,7 +126,6 @@ def main():
 
         # forced stop for testing
         #pageWithContent = False
-
         page += 1
         position = 0
 
