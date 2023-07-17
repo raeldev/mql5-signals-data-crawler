@@ -1,6 +1,6 @@
 Basic project to extract all public signals information.
 
-### Prerequisites:
+###Prerequisites:
   - Docker
 
 ### Run with Docker
@@ -14,7 +14,7 @@ Basic project to extract all public signals information.
   - Run this command at folder `pip3 install -r requirements.txt`
   - Start crawler with `python3 main.py`
 
-### Features
+###Features
 - Made with sync approach
 - Supports continue stopped job
 - Supports to configure limit of days to ignore sync
