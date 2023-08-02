@@ -1,6 +1,6 @@
 Basic project to extract all public signals information.
 
-###Prerequisites:
+### Prerequisites:
   - Docker
 
 ### Run with Docker
@@ -14,7 +14,7 @@ Basic project to extract all public signals information.
   - Run this command at folder `pip3 install -r requirements.txt`
   - Start crawler with `python3 main.py`
 
-###Features
+### Features
 - Made with sync approach
 - Supports continue stopped job
 - Supports to configure limit of days to ignore sync
@@ -25,5 +25,7 @@ Basic project to extract all public signals information.
 - Add Python container in docker-compose
 - Get Risks Data
 - Get login protected data like Trading History
+- Add Telemetry
+- Separete project in Crawler and Normalizer
 
 _I'm not a python expert and I do it to learn._
